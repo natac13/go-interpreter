@@ -17,18 +17,6 @@ func New(input string) *Lexer {
 	return l
 }
 
-// readChar reads the next character from the input and updates the lexer's position.
-// If there are no more characters in the input, it sets the current character to 0.
-func (l *Lexer) readChar() {
-	if l.readPosition >= len(l.input) {
-		l.ch = 0
-	} else {
-		l.ch = l.input[l.readPosition]
-	}
-	l.position = l.readPosition
-	l.readPosition++
-}
-
 // NextToken scans the input and returns the next token.
 // It examines the current character and determines the appropriate token type.
 // If the current character is a letter, it reads an identifier.
@@ -80,11 +68,16 @@ func (l *Lexer) NextToken() token.Token {
 	return tok
 }
 
-func newToken(tokenType token.TokenType, ch byte) token.Token {
-	return token.Token{
-		Type:    tokenType,
-		Literal: string(ch),
+// readChar reads the next character from the input and updates the lexer's position.
+// If there are no more characters in the input, it sets the current character to 0.
+func (l *Lexer) readChar() {
+	if l.readPosition >= len(l.input) {
+		l.ch = 0
+	} else {
+		l.ch = l.input[l.readPosition]
 	}
+	l.position = l.readPosition
+	l.readPosition++
 }
 
 func (l *Lexer) readIdentifier() string {
@@ -93,10 +86,6 @@ func (l *Lexer) readIdentifier() string {
 		l.readChar()
 	}
 	return l.input[position:l.position]
-}
-
-func isLetter(ch byte) bool {
-	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
 func (l *Lexer) skipWhitespace() {
@@ -111,6 +100,19 @@ func (l *Lexer) readNumber() string {
 		l.readChar()
 	}
 	return l.input[position:l.position]
+}
+
+// helper functions
+
+func newToken(tokenType token.TokenType, ch byte) token.Token {
+	return token.Token{
+		Type:    tokenType,
+		Literal: string(ch),
+	}
+}
+
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
 func isDigit(ch byte) bool {

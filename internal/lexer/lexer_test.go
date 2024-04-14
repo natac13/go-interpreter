@@ -107,3 +107,50 @@ let result = add(five, ten);
 		}
 	}
 }
+
+func TestIsLetter(t *testing.T) {
+	tests := []struct {
+		input    byte
+		expected bool
+	}{
+		{'a', true},
+		{'Z', true},
+		{'_', true},
+		{'1', false},
+		{' ', false},
+	}
+
+	for i, tt := range tests {
+		if isLetter(tt.input) != tt.expected {
+			t.Fatalf("tests[%d] - wrong value", i)
+		}
+	}
+}
+
+func TestIsDigit(t *testing.T) {
+	tests := []struct {
+		input    byte
+		expected bool
+	}{
+		{'1', true},
+		{'9', true},
+		{'0', true},
+		{'a', false},
+		{' ', false},
+	}
+
+	for i, tt := range tests {
+		if isDigit(tt.input) != tt.expected {
+			t.Fatalf("tests[%d] - wrong value", i)
+		}
+	}
+}
+
+func TestReadIdentifier(t *testing.T) {
+	input := `foobar;`
+	l := New(input)
+	expected := "foobar"
+	if got := l.readIdentifier(); got != expected {
+		t.Fatalf("expected=%q, got=%q", expected, got)
+	}
+}
